@@ -1,0 +1,30 @@
+# chorus-cloud 自托管（Node + SQLite）。
+# 用法：cd packages/cloud && docker compose up -d --build
+services:
+  cloud:
+    build:
+      context: ../..
+      dockerfile: packages/cloud/Dockerfile
+    image: chorus-cloud:latest
+    ports:
+      - '8787:8787'
+    volumes:
+      - cloud-data:/data # SQLite 库 + secrets.json 都在这里，备份 = 备份这个卷
+    environment:
+      # 建议显式设置（openssl rand -hex 32 生成）；不设置则首次启动自动生成
+      # 并持久化到 /data/secrets.json，重启/重建容器后保持不变。
+      # AUTH_TOKEN: change-me
+      # JWT_SECRET: change-me
+      #
+      # 可选：订阅接口限流（次/分钟/订阅），不设置则不限流
+      CHORUS_CLOUD_SUB_RATE_LIMIT_RPM: '120'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:8787/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  cloud-data:

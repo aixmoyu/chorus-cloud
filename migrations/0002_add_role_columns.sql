@@ -1,0 +1,5 @@
+-- Migration 0002: add role / compose_template / entry_script / description to templates
+-- NOTE: These columns were retroactively added to 0001's CREATE TABLE.
+-- This migration is kept for remote DBs where 0001 was originally applied without these columns.
+-- For local-from-scratch, these ALTERs would duplicate, so we use a no-op placeholder.
+-- D1 migrations must exist in sequence; this file intentionally has no statements.

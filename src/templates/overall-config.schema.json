@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "chorus-cloud://templates/overall-config.schema.json",
+  "title": "Overall Template Config",
+  "description": "Schema for config.json files in templates/{server,client,docker}/*/",
+  "type": "object",
+  "required": ["params"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable template name (optional, defaults to folder name)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Template version (optional, defaults to 1.0.0)",
+      "examples": ["1.0.0"]
+    },
+    "params": {
+      "type": "array",
+      "description": "Overall template parameter definitions",
+      "items": { "$ref": "#/definitions/paramDef" }
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional template description"
+    }
+  },
+  "definitions": {
+    "paramDef": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name, used as {{ params.name }} in templates",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "select"],
+          "description": "Parameter type"
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this param must be provided by the user"
+        },
+        "default": {
+          "description": "Default value (mutually exclusive with generator). If neither default nor generator is set, required must be true.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "generator": {
+          "type": "string",
+          "description": "Generator name:args (mutually exclusive with default). Built-in: uuid, hex:N, x25519_keypair, random_port, now_iso",
+          "examples": ["uuid", "hex:8", "x25519_keypair"]
+        },
+        "enum": {
+          "type": "array",
+          "description": "Allowed values (for type=select)",
+          "items": { "type": "string" }
+        },
+        "description": {
+          "type": "string",
+          "description": "Description shown in admin UI"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text shown in input field"
+        }
+      }
+    }
+  }
+}

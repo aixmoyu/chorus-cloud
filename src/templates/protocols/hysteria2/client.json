@@ -1,0 +1,11 @@
+{
+  "type": "hysteria2",
+  "tag": "{{ params.tag }}",
+  "server": "{{ params.domain }}",
+  "server_port": "{{ params.port }}",
+  "password": "{{ params.password }}",
+  "tls": {
+    "enabled": true,
+    "server_name": "{{ params.domain }}"
+  }
+}

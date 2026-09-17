@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "chorus-cloud://templates/protocols/config.schema.json",
+  "title": "Protocol Config",
+  "description": "Schema for protocol config.json files in templates/protocols/*/",
+  "type": "object",
+  "required": ["name", "version", "params"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable protocol name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Protocol version (semver)",
+      "examples": ["1.0.0"]
+    },
+    "params": {
+      "type": "array",
+      "description": "Parameter definitions",
+      "items": { "$ref": "#/definitions/paramDef" }
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional protocol description"
+    }
+  },
+  "definitions": {
+    "paramDef": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name, used as {{ params.name }} in templates",
+          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "select"],
+          "description": "Parameter type"
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this param must be provided by the user"
+        },
+        "default": {
+          "description": "Default value (mutually exclusive with generator). If neither default nor generator is set, required must be true.",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "generator": {
+          "type": "string",
+          "description": "Generator name:args (mutually exclusive with default). Built-in: uuid, hex:N, x25519_keypair, random_port, now_iso",
+          "examples": ["uuid", "hex:8", "x25519_keypair"]
+        },
+        "enum": {
+          "type": "array",
+          "description": "Allowed values (for type=select)",
+          "items": { "type": "string" }
+        },
+        "description": {
+          "type": "string",
+          "description": "Description shown in admin UI"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text shown in input field"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["default"] },
+          "then": { "not": { "required": ["generator"] } }
+        },
+        {
+          "if": { "required": ["generator"] },
+          "then": { "not": { "required": ["default"] } }
+        },
+        {
+          "if": {
+            "not": {
+              "anyOf": [
+                { "required": ["default"] },
+                { "required": ["generator"] },
+                { "properties": { "required": { "const": true } } }
+              ]
+            }
+          },
+          "then": {
+            "description": "Must have default, generator, or required:true"
+          }
+        }
+      ]
+    }
+  }
+}

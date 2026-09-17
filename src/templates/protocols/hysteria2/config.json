@@ -1,0 +1,13 @@
+{
+  "$schema": "../config.schema.json",
+  "name": "Hysteria2",
+  "version": "1.0.0",
+  "params": [
+    { "name": "domain", "type": "string", "required": true, "description": "Server address" },
+    { "name": "port", "type": "number", "description": "Listen port (auto-generated high port)", "generator": "random_port_high:30000" },
+    { "name": "tag", "type": "string", "description": "Config tag (auto-generated if left empty)", "generator": "random_tag:hy2" },
+    { "name": "password", "type": "string", "description": "Auth password (auto-generated)", "generator": "uuid" },
+    { "name": "masqueradeDomain", "type": "string", "default": "update.microsoft", "description": "Obfuscation domain" }
+  ],
+  "description": "Hysteria2 protocol with salamander obfuscation"
+}

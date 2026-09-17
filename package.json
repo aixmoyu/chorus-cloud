@@ -1,0 +1,51 @@
+{
+  "name": "chorus-cloud",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:prod": "node scripts/setup-prod.mjs",
+    "deploy": "wrangler d1 migrations apply DB --remote && wrangler deploy",
+    "deploy:prod": "wrangler d1 migrations apply DB --remote --config wrangler.prod.toml && wrangler deploy --config wrangler.prod.toml",
+    "dev": "wrangler dev",
+    "test": "vitest run && vitest run --config vitest.config.node.ts",
+    "test:workers": "vitest run",
+    "test:node": "vitest run --config vitest.config.node.ts",
+    "test:watch": "vitest",
+    "cf-typegen": "wrangler types",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "migrate:create": "wrangler d1 migrations create chorus-cloud",
+    "build:node": "esbuild src/node/entry.ts --bundle --platform=node --format=esm --target=node20 --outfile=dist-node/entry.mjs --external:better-sqlite3",
+    "start:node": "node dist-node/entry.mjs",
+    "dev:node": "tsx src/node/entry.ts"
+  },
+  "cloudflare": {
+    "bindings": {
+      "AUTH_TOKEN": {
+        "description": "Bearer token for admin API authentication. Generate a random string using `openssl rand -hex 32`."
+      },
+      "JWT_SECRET": {
+        "description": "Signing secret for JWT auth tokens. Generate a random string using `openssl rand -hex 32`."
+      }
+    }
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "@hono/zod-validator": "^0.4.0",
+    "zod": "^3.24.0",
+    "@noble/curves": "^1.8.1",
+    "@hono/node-server": "^1.14.0",
+    "better-sqlite3": "^12.4.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.19",
+    "@cloudflare/workers-types": "^4.20250201.0",
+    "typescript": "^5.7.0",
+    "vitest": "~3.2.0",
+    "wrangler": "^4.28.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "esbuild": "^0.25.5",
+    "tsx": "^4.19.1"
+  }
+}

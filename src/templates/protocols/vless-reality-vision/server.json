@@ -1,0 +1,26 @@
+{
+  "type": "vless",
+  "tag": "{{ params.tag }}",
+  "listen": "::",
+  "listen_port": "{{ params.port }}",
+  "users": [
+    {
+      "name": "",
+      "uuid": "{{ params.uuid }}",
+      "flow": "xtls-rprx-vision"
+    }
+  ],
+  "tls": {
+    "enabled": true,
+    "server_name": "{{ params.realityServerName }}",
+    "reality": {
+      "enabled": true,
+      "handshake": {
+        "server": "{{ params.realityServerName }}",
+        "server_port": 443
+      },
+      "private_key": "{{ params.realityKeyPair.privateKey }}",
+      "short_id": ["{{ params.realityShortID }}"]
+    }
+  }
+}

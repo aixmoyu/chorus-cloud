@@ -1,0 +1,25 @@
+{
+  "services": {
+    "sing-box": {
+      "image": "ghcr.io/sagernet/sing-box:latest",
+      "container_name": "sing-box",
+      "restart": "unless-stopped",
+      "network_mode": "host",
+      "volumes": [
+        "./data:/data",
+        "./tls:/tls"
+      ],
+      "cap_add": [
+        "NET_ADMIN"
+      ],
+      "devices": [
+        "/dev/net/tun"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "entrypoint": ["sh", "/data/entry.sh"]
+    }
+  }
+}

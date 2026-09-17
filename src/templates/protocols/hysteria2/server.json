@@ -1,0 +1,27 @@
+{
+  "type": "hysteria2",
+  "tag": "{{ params.tag }}",
+  "listen": "::",
+  "listen_port": "{{ params.port }}",
+  "users": [
+    {
+      "password": "{{ params.password }}"
+    }
+  ],
+  "tls": {
+    "enabled": true,
+    "server_name": "{{ params.domain }}",
+    "alpn": "h3",
+    "certificate_provider": {
+      "type": "acme",
+      "domain": "{{ params.domain }}",
+      "data_directory": "/tls",
+      "email": "admin@xxx.com",
+      "provider": "letsencrypt"
+    }
+  },
+  "masquerade": {
+    "type": "proxy",
+    "url": "https://{{ params.masqueradeDomain }}/"
+  }
+}

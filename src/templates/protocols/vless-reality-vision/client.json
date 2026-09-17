@@ -1,0 +1,21 @@
+{
+  "type": "vless",
+  "tag": "{{ params.tag }}",
+  "server": "{{ params.domain }}",
+  "server_port": "{{ params.port }}",
+  "uuid": "{{ params.uuid }}",
+  "flow": "xtls-rprx-vision",
+  "tls": {
+    "enabled": true,
+    "server_name": "{{ params.realityServerName }}",
+    "utls": {
+      "enabled": true,
+      "fingerprint": "chrome"
+    },
+    "reality": {
+      "enabled": true,
+      "public_key": "{{ params.realityKeyPair.publicKey }}",
+      "short_id": "{{ params.realityShortID }}"
+    }
+  }
+}
